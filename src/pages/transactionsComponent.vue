@@ -16,25 +16,11 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import useTransacions from "../uses/fetchTransactions";
 export default {
   setup() {
-    const transactions = ref([]);
-    const error = ref(null);
-
-    const fetchAll = async () => {
-      try {
-        const response = await fetch("http://localhost:3000/transactions");
-        if (!response.ok) throw new Error();
-        transactions.value = await response.json();
-      } catch (err) {
-        error.value = err;
-        console.log(error.value);
-      }
-    };
-
+    const { transactions, error, fetchAll } = useTransacions();
     fetchAll();
-
     return { transactions, error };
   },
 };

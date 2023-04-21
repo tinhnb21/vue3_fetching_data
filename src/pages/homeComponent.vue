@@ -6,9 +6,11 @@
       {{ customer }}
     </li>
   </ul>
+  <p>{{ transactions }}</p>
 </template>
 <script>
 import { ref, reactive, computed, watch, watchEffect } from "vue";
+import useTransactions from "../uses/fetchTransactions";
 
 export default {
   props: {
@@ -20,8 +22,10 @@ export default {
   },
   // eslint-disable-next-line vue/no-setup-props-destructure
   setup({ theme }, { emit }) {
-    console.log("props", theme);
-    console.log("context", emit);
+    console.log(theme);
+    console.log(emit);
+    const { transactions, fetchAll } = useTransactions();
+    fetchAll();
     const searchText = ref("");
     const customers = reactive([
       "Something",
@@ -49,7 +53,7 @@ export default {
       }
     });
 
-    return { customersFilter, searchText };
+    return { customersFilter, searchText, transactions };
   },
 };
 </script>
