@@ -5,7 +5,8 @@ const store = createStore({
     return {
       count: 1000,
       transaction: null,
-      transactions: [1, 2, 3, 4],
+      transactions: [],
+      error: null,
     };
   },
   getters: {
@@ -20,12 +21,29 @@ const store = createStore({
     setTransaction(state, transactionPayload) {
       state.transaction = transactionPayload;
     },
+    setTransactions(state, transactionsPaylaod) {
+      state.transactions = transactionsPaylaod;
+    },
+    setError(state, errorPayload) {
+      state.error = errorPayload;
+    },
   },
   actions: {
     async fetchTransaction({ commit }, { id }) {
       const res = await fetch("http://localhost:3000/transactions/" + id);
       const data = await res.json();
       commit("setTransaction", data);
+    },
+    async fetchAllTransactions({ commit }) {
+      try {
+        const response = await fetch("http://localhost:3000/transactions");
+        if (!response.ok) throw new Error("Something went wrong.");
+        const data = await response.json();
+        commit("setTransactions", data);
+      } catch (err) {
+        commit("setError", err.message);
+        console.log(err);
+      }
     },
   },
 });
